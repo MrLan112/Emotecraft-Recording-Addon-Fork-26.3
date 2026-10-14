@@ -13,6 +13,7 @@
     "issues": "https://github.com/MrLan112/Emotecraft-Recording-Addon-Fork-26.3/issues",
     "sources": "https://github.com/IceCraft-Studio/emotecraft-recording-addon"
   },
+  "icon": "assets/icon.png",
   "license": "GPL-3.0-or-later",
   "environment": "client",
   "entrypoints": {
