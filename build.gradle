@@ -13,6 +13,11 @@ repositories {
     mavenCentral()
 
     maven {
+        name = "RedlanceMinecraft"
+        url = uri("https://repo.redlance.org/public")
+    }
+
+    maven {
         name = "Kosmx"
         url = uri("https://maven.kosmx.dev/")
     }
