@@ -1,3 +1,5 @@
+// Fork / Port to Minecraft Java Edition 26.3.
+// Based on IceCraft Studio's Emotecraft Recording Addon: https://github.com/IceCraft-Studio/emotecraft-recording-addon
 package studio.icecraft.emotecraftrecording;
 
 import net.fabricmc.api.ClientModInitializer;

@@ -1,124 +1,84 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-	id 'maven-publish'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+    archivesName = project.archives_base_name
 }
 
 repositories {
-	mavenLocal()
-	mavenCentral()
- 	maven {
- 		name = "RedlanceMinecraft"
-		url = uri("https://repo.redlance.org/public")
-	}
- 	maven{
-		url = uri("https://repo1.maven.org/maven2/")
-	}
-	maven{
-		url = uri("https://maven.kosmx.dev/")
-	}
-	maven{
-		url = uri("https://maven.shedaniel.me/")
-	}
-	maven{
-		url = uri("https://maven.terraformersmc.com/releases/")
-	}
-	maven{
-		url = uri("https://api.modrinth.com/maven")
- 		content {
- 			includeGroup("maven.modrinth")
- 		}
-	}
-	exclusiveContent {
-		forRepository {
-			maven {
-				url = uri("https://maven.kosmx.dev/")
-			}
-		}
-		filter {
-			includeGroup "io.github.kosmx.emotes"
-		}
-	}
+    mavenCentral()
+
+    maven {
+        name = "Kosmx"
+        url = uri("https://maven.kosmx.dev/")
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 loom {
-	splitEnvironmentSourceSets()
+    splitEnvironmentSourceSets()
 
-	mods {
-		"modid" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-
+    mods {
+        "emotecraft-recording-addon" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	//mappings loom.officialMojangMappings()
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-	// Mod Dependencies
-	implementation("com.terraformersmc:modmenu:${project.mod_menu_version}")
+    // Emotecraft API for compiling the packet bridge and its runtime mod artifact.
     compileOnly("io.github.kosmx.emotes:emotesFabric:${project.emotecraft_version}")
+    implementation("maven.modrinth:${project.emotecraft_modrinth_project_id}:${project.emotecraft_modrinth_version_id}")
 
-	implementation("com.zigythebird.playeranim:PlayerAnimationLibFabric:${project.player_anim_version}+mc.${project.player_anim_mc_version}")
-	implementation("maven.modrinth:emotecraft:${project.emotecraft_version}")
-	implementation("maven.modrinth:flashback:${project.flashback_version}-fabric,${project.flashback_mc_version}")
-	implementation("maven.modrinth:replaymod:${project.replaymod_mc_version}-${project.replaymod_version}")
+    // Flashback is the currently supported 26.3 recording backend.
+    implementation("maven.modrinth:${project.flashback_modrinth_project_id}:${project.flashback_modrinth_version_id}")
+
+    // Replay Mod is intentionally not a compile-time dependency: the only listed version
+    // is for Minecraft 26.2. Its optional bridge uses reflection and is version-dependent.
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
+    options.release = 25
 }
 
 java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
-	inputs.property "archivesName", project.base.archivesName
+    inputs.property "archivesName", project.base.archivesName
 
-	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
-	}
+    from("LICENSE") {
+        rename { "${it}_${inputs.properties.archivesName}" }
+    }
 }
-
-// configure the maven publication
-//publishing {
-	//publications {
-		//create("mavenJava", MavenPublication) {
-			//artifactId = project.archives_base_name
-			//from components.java
-		//}
-	//}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	//repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	//}
-//}
