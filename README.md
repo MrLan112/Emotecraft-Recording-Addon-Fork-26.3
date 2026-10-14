@@ -33,21 +33,16 @@ See [UPSTREAM_ORIGIN.md](UPSTREAM_ORIGIN.md) for the imported upstream revision 
 
 Requirements: JDK 25+, Gradle 9.6.0+, and network access to the Minecraft, Fabric, Kosmx and Modrinth repositories.
 
-First verify the Gradle version in the same terminal or IDE environment that will build the project:
+This repository includes Gradle Wrapper scripts, so you do **not** need to install Gradle globally or add it to PATH. From the repository root in PowerShell, run:
 
 ```powershell
-gradle --version
+.\gradlew.bat --version
+.\gradlew.bat clean build
 ```
 
-The output must report Gradle **9.6.0 or newer**. Then run from the repository root:
+The first command automatically downloads and runs Gradle 9.6.0. The second builds the mod. Set the Gradle JVM to JDK 25 in IntelliJ IDEA. In **Settings → Build, Execution, Deployment → Build Tools → Gradle**, choose the project Gradle Wrapper (the `gradle-wrapper.properties` file) as the Gradle distribution rather than a locally installed Gradle 9.3.
 
-```powershell
-gradle clean build
-```
-
-If this reports Gradle 9.3, install Gradle 9.6.0 and update your PATH, or run Gradle using the full path to its 9.6.0 installation. For IntelliJ IDEA, open **Settings → Build, Execution, Deployment → Build Tools → Gradle**, then select your Gradle 9.6.0 installation under **Gradle distribution**. Also set the Gradle JVM to JDK 25. Simply changing the Java version does not update Gradle itself.
-
-A settings-level version check now stops early with an explanatory message if Gradle is too old. The built mod JAR is placed in `build/libs/`. This repository does not include a Gradle wrapper JAR, so use an installed Gradle 9.6.0+. GitHub Actions also builds with Gradle 9.6.0.
+A settings-level version check stops early with an explanatory message if Gradle is too old. The built mod JAR is placed in `build/libs/`. GitHub Actions uses Gradle 9.6.0 too.
 
 ## Fork status
 
