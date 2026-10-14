@@ -1,10 +1,24 @@
+import org.gradle.util.GradleVersion
+
 pluginManagement {
-	repositories {
-		maven {
-			name = 'Fabric'
-			url = 'https://maven.fabricmc.net/'
-		}
-		mavenCentral()
-		gradlePluginPortal()
-	}
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// Minecraft 26.3's supported Fabric development toolchain uses Gradle 9.6.0.
+// Fail here, before resolving Fabric Loom, with a useful message for older IDE Gradle settings.
+def requiredGradle = GradleVersion.version("9.6.0")
+def currentGradle = GradleVersion.current()
+if (currentGradle < requiredGradle) {
+    throw new GradleException(
+        "This Minecraft 26.3 port requires Gradle 9.6.0 or newer. " +
+        "Detected Gradle " + currentGradle + ". Fabric Loom 1.17.21 cannot run with Gradle 9.3. " +
+        "Install Gradle 9.6.0 and select it in your IDE's Gradle settings. See README.md."
+    )
 }
